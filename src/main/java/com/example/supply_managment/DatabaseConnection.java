@@ -40,15 +40,18 @@ public class DatabaseConnection {
         }
         return  -1;
     }
-    public String getUserName(String email){
-        String query = String.format("SELECT first_name FROM supply_chain.customer WHERE email = '%s'",email);
+    public String getUserNumber(String email){
+        String query = String.format("SELECT mobile FROM supply_chain.customer WHERE email = '%s'",email);
         Statement statement = getStatement();
         try {
             ResultSet rs = statement.executeQuery(query);
-            return rs.getString("first_name");
+            while(rs != null && rs.next()){
+                return rs.getString("mobile");
+            }
         } catch (SQLException e) {
             throw new RuntimeException(e);
         }
+        return null;
     }
     public boolean getUserAccessCode(String email){
         String query = String.format("SELECT * FROM CUSTOMER WHERE email = '%s' AND level = 1",email);

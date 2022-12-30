@@ -54,16 +54,12 @@ public class SendOTP {
         String otpMessage = generateOTP();
         System.out.println("new OTP" + otpMessage);
         String apikey ="qsTpFdRzchA1tZo7w4E6jm3XNDguIHvOGPMLxeri08anlbSUWJok3sRyTxge9NFHLME15aP0DOZdlujc";
-        String number = userNumber;
-        sendOTP("DO not share; your myShopping app signup otp is : " +otpMessage,number,apikey);
+        sendOTP("DO not share; your myShopping app signup otp is : " +otpMessage,userNumber,apikey);
         System.out.println(otpMessage);
        return otpMessage;
     }
-
-    public static void main(String[] args) {
-        // check sms alert
-        SendOTP s = new SendOTP();
-        s.signupOTP("7999871616");
-
+    public void orderStatus(String userNumber, String productName){
+        String apikey ="qsTpFdRzchA1tZo7w4E6jm3XNDguIHvOGPMLxeri08anlbSUWJok3sRyTxge9NFHLME15aP0DOZdlujc";
+        sendOTP("Your Order" + productName + " from My shopping has been placed successfully",userNumber,apikey);
     }
 }

@@ -272,6 +272,10 @@ public class Cart {
         tablePane.getChildren().add(productTableView);
         return tablePane;
     }
+    public String getOrderName(ResultSet rs){
+        // from result set get product id and with the help of product id get product name form DB and retun concat string
+        return null;
+    }
     public void removeAllFromCart(String email){
         String query = String.format("DELETE FROM cart WHERE customer_ID = (SELECT customerId FROM customer WHERE email = '%s')",email);
         try {

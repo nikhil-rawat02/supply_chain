@@ -28,6 +28,7 @@ public class Login {
     static Button loginButton = new Button("Login");
     static Label updateStatus = new Label(); // to display message if order placed or add to cart
     static String email;
+    static String userMobileNumber;
     static boolean adminLoggedIn = false;
     static TextField emailField = new TextField();
     static PasswordField passwordField = new PasswordField();
@@ -151,6 +152,14 @@ public class Login {
                     if(cart.placeMyOrder(cartData)) {
                         updateStatus.setText("Order Placed");
                         updateStatus.setTextFill(Color.BLACK);
+                    }
+                    SendOTP sndotp =  new SendOTP();
+                    String number = databaseConnection.getUserNumber(email);
+                    if(number == null){
+                        System.out.println("check result set");
+                    }else{
+                        // update getOrder by name method in cart to add product name in SMS
+                        sndotp.orderStatus(number,"All product");
                     }
                     // empty all product from cart
                     cart.removeAllFromCart(Login.email);
