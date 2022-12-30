@@ -5,6 +5,7 @@ import java.io.BufferedReader;
 import java.io.InputStreamReader;
 import java.net.URL;
 import java.net.URLEncoder;
+import java.nio.charset.StandardCharsets;
 import java.util.Random;
 
 public class SendOTP {
@@ -15,7 +16,7 @@ public class SendOTP {
             String langauge = "english";
             String route = "v3";
 
-            message = URLEncoder.encode(message,"UTF-8");
+            message = URLEncoder.encode(message, StandardCharsets.UTF_8);
             String myUrl = "https://www.fast2sms.com/dev/bulkV2?authorization=" + apiKey + "&sender_id=" + sendId +"&message=" + message +"&route=" + route+"&numbers=" + number;
 
             URL url = new URL(myUrl);
@@ -61,6 +62,8 @@ public class SendOTP {
 
     public static void main(String[] args) {
         // check sms alert
+        SendOTP s = new SendOTP();
+        s.signupOTP("7999871616");
 
     }
 }

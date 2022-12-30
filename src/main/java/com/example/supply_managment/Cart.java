@@ -9,7 +9,6 @@ import javafx.scene.control.TableColumn;
 import javafx.scene.control.TableView;
 import javafx.scene.control.cell.PropertyValueFactory;
 import javafx.scene.layout.Pane;
-
 import javax.sql.StatementEvent;
 import java.sql.ResultSet;
 import java.sql.Statement;
@@ -272,5 +271,13 @@ public class Cart {
         tablePane.setMinSize(supply_chain.width,supply_chain.height);
         tablePane.getChildren().add(productTableView);
         return tablePane;
+    }
+    public void removeAllFromCart(String email){
+        String query = String.format("DELETE FROM cart WHERE customer_ID = (SELECT customerId FROM customer WHERE email = '%s')",email);
+        try {
+            dBCon.executeUpdateQuery(query);
+        }catch (Exception e){
+            e.printStackTrace();
+        }
     }
 }

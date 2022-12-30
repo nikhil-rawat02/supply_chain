@@ -152,6 +152,8 @@ public class Login {
                         updateStatus.setText("Order Placed");
                         updateStatus.setTextFill(Color.BLACK);
                     }
+                    // empty all product from cart
+                    cart.removeAllFromCart(Login.email);
                 }
             }
             else if(selected == null){

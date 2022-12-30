@@ -138,7 +138,7 @@ public class Product {
     public static ObservableList<Product> getAllProducts() {
         DatabaseConnection databaseConnection = new DatabaseConnection();
         ObservableList<Product> productList = FXCollections.observableArrayList();
-        String selectProducts = "SELECT * FROM PRODUCT";
+        String selectProducts = "SELECT * FROM product WHERE qantity != 0";
         try {
             ResultSet rs = databaseConnection.getQuerryTable(selectProducts);
             while (rs.next()) {
