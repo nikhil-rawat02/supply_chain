@@ -12,22 +12,86 @@ public class Product {
     private SimpleIntegerProperty id;
     private SimpleStringProperty name;
     private SimpleDoubleProperty price;
-    private SimpleStringProperty productDetails;
-    private SimpleStringProperty seller;
+    private SimpleStringProperty productDetails; //productDetails
+    private SimpleStringProperty supplier; // seller
     private SimpleIntegerProperty quantity;
+
+//    public int getId() {
+//        return id.get();
+//    }
 
     public int getId() {
         return id.get();
     }
+
+    public SimpleIntegerProperty idProperty() {
+        return id;
+    }
+
+    public void setId(int id) {
+        this.id.set(id);
+    }
+
     public String getName() {
         return name.get();
     }
+
+    public SimpleStringProperty nameProperty() {
+        return name;
+    }
+
+    public void setName(String name) {
+        this.name.set(name);
+    }
+
     public double getPrice() {
         return price.get();
     }
-    public String getProductDetails(){return productDetails.get();}
-    public String getSellerName(){return seller.get();}
-    public int getQuantity(){return quantity.get();}
+
+    public SimpleDoubleProperty priceProperty() {
+        return price;
+    }
+
+    public void setPrice(double price) {
+        this.price.set(price);
+    }
+
+    public String getProductDetails() {
+        return productDetails.get();
+    }
+
+    public SimpleStringProperty productDetailsProperty() {
+        return productDetails;
+    }
+
+    public void setProductDetails(String productDetails) {
+        this.productDetails.set(productDetails);
+    }
+
+    public String getSupplier() {
+        return supplier.get();
+    }
+
+    public SimpleStringProperty supplierProperty() {
+        return supplier;
+    }
+
+    public void setSupplier(String supplier) {
+        this.supplier.set(supplier);
+    }
+
+    public int getQuantity() {
+        return quantity.get();
+    }
+
+    public SimpleIntegerProperty quantityProperty() {
+        return quantity;
+    }
+
+    public void setQuantity(int quantity) {
+        this.quantity.set(quantity);
+    }
+
 /*
     public Product(int id, String name, double price) {
         // to get product on simple table
@@ -38,12 +102,12 @@ public class Product {
     }
 */
 
-    public Product( int id, String name, double price, String productDetails, String seller, int quantity) {
+    public Product( int id, String name, double price, String productDetails, String supplier, int quantity) {
         this.id = new SimpleIntegerProperty(id);
         this.name = new SimpleStringProperty(name);
         this.price = new SimpleDoubleProperty(price);
-        this.productDetails = new SimpleStringProperty(productDetails);
-        this.seller = new SimpleStringProperty(seller);
+        this.productDetails = new SimpleStringProperty(productDetails);//productDetails
+        this.supplier = new SimpleStringProperty(supplier); //seller
         this.quantity = new SimpleIntegerProperty(quantity);
 
     }
@@ -83,7 +147,7 @@ public class Product {
                                 rs.getInt("productId"),
                                 rs.getString("name"),
                                 rs.getDouble("price"),
-                                rs.getString("Product_Details"),
+                                rs.getString("Product_Details"), //productDetails
                                 rs.getString("supplier"),
                                 rs.getInt("qantity")
                         )
@@ -93,6 +157,18 @@ public class Product {
             e.printStackTrace();
         }
         return productList;
+    }
+
+    @Override
+    public String toString() {
+        return "Product{" +
+                "id=" + id +
+                ", name=" + name +
+                ", price=" + price +
+                ", productDetails='" + productDetails + '\'' +
+                ", seller='" + supplier + '\'' +
+                ", quantity=" + quantity +
+                '}';
     }
     /*
     //orignal

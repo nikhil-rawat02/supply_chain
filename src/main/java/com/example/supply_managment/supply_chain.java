@@ -48,7 +48,7 @@ public class supply_chain extends Application {
     public GridPane headerBar() throws FileNotFoundException {
         searchText = new TextField();
         searchButton= new Button("Search");
-        preSignUp= new Label("Not a member? ");
+        preSignUp= new Label("Not a member?");
         signup = new Hyperlink("Sign up");
         loginImg = new Image(new FileInputStream("C:\\Users\\Dpk\\Desktop\\Java\\supply_managment\\src\\images\\loginbutton.jpg"));
         loginImage = new ImageView(loginImg);
@@ -213,15 +213,13 @@ public class supply_chain extends Application {
     }
     @Override
     public void start(Stage stage) throws IOException {
-        basePane = new Pane(createContent());
 
-        ScrollPane scrollPane = new ScrollPane();
-        scrollPane.setPrefSize(width, height + 2*headerBarsize);
+        ScrollPane scrollPane = new ScrollPane(createContent());
+        scrollPane.setPrefSize(width+2, height + 2*headerBarsize + 2);
         scrollPane.setHbarPolicy(ScrollPane.ScrollBarPolicy.AS_NEEDED);
         scrollPane.setVbarPolicy(ScrollPane.ScrollBarPolicy.AS_NEEDED);
-        scrollPane.setContent(basePane);
 
-        Scene scene = new Scene(basePane);
+        Scene scene = new Scene(scrollPane);
         stage.setTitle("My Shopping!");
         stage.setScene(scene);
         stage.show();

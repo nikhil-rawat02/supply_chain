@@ -40,6 +40,16 @@
         </dependency>
     </dependencies>
 
+
+    <!--    <dependencies>-->
+<!--        <dependency>-->
+<!--            <groupId>com.paypal.sdk</groupId>-->
+<!--            <artifactId>reset-api-sdk</artifactId>-->
+<!--            <version>1.14.0</version>-->
+<!--        </dependency>-->
+<!--    </dependencies>-->
+
+
     <build>
         <plugins>
             <plugin>

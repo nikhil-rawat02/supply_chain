@@ -1,5 +1,6 @@
 package com.example.supply_managment;
 
+import javafx.collections.ObservableList;
 import javafx.geometry.Insets;
 import javafx.scene.control.Button;
 import javafx.scene.control.Label;
@@ -16,6 +17,7 @@ import javafx.scene.text.FontWeight;
 
 import java.io.FileInputStream;
 import java.io.FileNotFoundException;
+import java.sql.ResultSet;
 
 public class Login {
     static Button addToCart = new Button("Add to Cart");
@@ -26,12 +28,15 @@ public class Login {
     static Button loginButton = new Button("Login");
     static Label updateStatus = new Label(); // to display message if order placed or add to cart
     static String email;
+    static boolean adminLoggedIn = false;
     static TextField emailField = new TextField();
     static PasswordField passwordField = new PasswordField();
     static Label messageLabel = new Label();
-    static Pane allProductDetails;
+    static Pane allProductDetails = new Pane();
     static Pane addPdDetails = new Pane();
     public static DatabaseConnection databaseConnection = new DatabaseConnection();
+    Cart cart = new Cart();
+
 
     static void updateHeader(){
         // if user has admin right add new function to open window to add product in db
@@ -43,6 +48,7 @@ public class Login {
         ImageView imageViewLogout = new ImageView(logout);
 
         if(databaseConnection.getUserAccessCode(email)){
+            adminLoggedIn = true;
             // give access to add products and view all products
             supply_chain.gridPaneHeader.add(imageViewaddPd,2,0);
             supply_chain.gridPaneHeader.add(imageViewPdList,3,0);
@@ -66,33 +72,23 @@ public class Login {
             loginButton.setDisable(false);
             BackgroundImage myBg = new BackgroundImage(new Image("C:\\Users\\Dpk\\Desktop\\Java\\supply_managment\\src\\images\\home_main.png",supply_chain.width,supply_chain.height + supply_chain.headerBarsize,false,true),BackgroundRepeat.NO_REPEAT, BackgroundRepeat.NO_REPEAT,BackgroundPosition.DEFAULT,BackgroundSize.DEFAULT);
             supply_chain.root.setBackground(new Background(myBg));
-            supply_chain.gridPaneHeader.getChildren().remove(imageViewLogout);
-            supply_chain.gridPaneHeader.getChildren().remove(imageViewaddPd);
-            supply_chain.gridPaneHeader.getChildren().remove(imageViewPdList);
-            supply_chain.gridPaneHeader.add(supply_chain.loginImage,6,0);
+            supply_chain.gridPaneHeader.getChildren().removeAll(imageViewLogout,imageViewaddPd,imageViewPdList,removeFromCart);
+             supply_chain.gridPaneHeader.add(supply_chain.loginImage,6,0);
             supply_chain.gridPaneHeader.add(supply_chain.preSignUp,8,0);
             supply_chain.gridPaneHeader.add(supply_chain.signup,9,0);
             supply_chain.bodyPane.getChildren().clear();
             supply_chain.bodyPane.getChildren().add(supply_chain.restoreHome);
-//            supply_chain.gridPaneFooter.add(supply_chain.FooterInfo, 0,0);
-//            supply_chain.gridPaneFooter.add(supply_chain.FooterAskLogin,0,1);
-//            supply_chain.gridPaneFooter.add(supply_chain.customerCareInfo1,36,0);
-//            supply_chain.gridPaneFooter.add(supply_chain.customerCareInfo2,36,1);
-//            supply_chain.gridPaneFooter.add(supply_chain.customerCareInfo3,37,1);
             supply_chain.customerCareInfo1.setTranslateX(269);
             supply_chain.customerCareInfo2.setTranslateX(270);
             supply_chain.customerCareInfo3.setTranslateX(270);
+            updateStatus.setText("");
             supply_chain.gridPaneFooter.add(supply_chain.FooterInfo, 0,0);
             supply_chain.gridPaneFooter.add(supply_chain.FooterAskLogin, 0,1);
             supply_chain.gridPaneFooter.add(supply_chain.customerCareInfo1,2,0);
             supply_chain.gridPaneFooter.add(supply_chain.customerCareInfo2,3,0);
             supply_chain.gridPaneFooter.add(supply_chain.customerCareInfo3,3,1);
-
-            supply_chain.gridPaneFooter.getChildren().remove(addToCart);
-            supply_chain.gridPaneFooter.getChildren().remove(buyNow);
-            supply_chain.gridPaneFooter.getChildren().remove(openCart);
-            supply_chain.gridPaneFooter.getChildren().remove(updateStatus);
-
+            supply_chain.gridPaneFooter.getChildren().removeAll(addToCart,buyNow,openCart,updateStatus,removeFromCart);
+            cartIsOpen = false;
         });
 
         imageViewaddPd.setFitWidth(supply_chain.headerBarsize);
@@ -106,36 +102,13 @@ public class Login {
         imageViewLogout.setPreserveRatio(true);
         imageViewLogout.setTranslateX(491);
 
-        supply_chain.gridPaneHeader.getChildren().remove(supply_chain.loginImage);
-        supply_chain.gridPaneHeader.getChildren().remove(supply_chain.preSignUp);
-        supply_chain.gridPaneHeader.getChildren().remove(supply_chain.signup);
+        supply_chain.gridPaneHeader.getChildren().removeAll(supply_chain.loginImage,supply_chain.preSignUp,supply_chain.signup);
         supply_chain.gridPaneHeader.add(imageViewLogout,7,0);
     }
-    static void updateFooter(){
+     void updateFooter(){
         Order order = new Order();
         ProductDetails productDetails = new ProductDetails();
-        buyNow.setOnAction(actionEvent -> {
-            Product selected = productDetails.getSelectedProduct();
 
-            if (cartIsOpen){ // place all the order in table. create DB for cart to keep track of on cart items
-                Product cartProduct = productDetails.getAllProductFromCart();// get all the product from cart;
-                order.placeAllOrderFromCart(email,cartProduct);
-                updateStatus.setText("Order Placed");
-                updateStatus.setTextFill(Color.BLACK);
-            }
-            else if(selected == null){
-                updateStatus.setText("Select item from table");
-                updateStatus.setTextFill(Color.RED);
-            }
-            else if(order.placeOrder(email,selected)){
-
-                updateStatus.setText("Order placed");
-                updateStatus.setTextFill(Color.BLACK);
-            }else{
-                updateStatus.setText("Order Failed");
-                updateStatus.setTextFill(Color.RED);
-            }
-        });
         openCart.setOnAction(actionEvent -> {
             supply_chain.gridPaneFooter.getChildren().remove(addToCart);
             supply_chain.gridPaneFooter.add(removeFromCart,0,0);
@@ -143,16 +116,58 @@ public class Login {
             removeFromCart.setTranslateY(10);
 
             cartIsOpen = true;
-            supply_chain.bodyPane.getChildren().clear();
             Cart newCart = new Cart();
+            supply_chain.bodyPane.getChildren().clear();
+
             supply_chain.bodyPane.getChildren().add(newCart.getOrderProduct(email));
         });
+        addToCart.setOnAction(actionEvent -> {
+            // update cart table in DB
+            Product selectedProduct = productDetails.getSelectedProduct();
+            boolean cartUpdated  = cart.addToCartSelectedProduct(email,selectedProduct.getId());
+            if(cartUpdated)updateStatus.setText("Selected Item add to cart");
+        });
+        removeFromCart.setOnAction(actionEvent -> {
+            if(cartIsOpen){
+                Cart selectedProduct = cart.getSelectedProduct();
+                boolean cartUpdated  = cart.removeFromCart(email,selectedProduct.getProductId());
+                if(cartUpdated) updateStatus.setText("Selected Item remove from cart");
+                // if cart qty is 0 remove from cart DB
+            }
+        });
+        buyNow.setOnAction(actionEvent -> {
+            Product selected = productDetails.getSelectedProduct();
+            // payment get way under development
+//            PaymentGateway paymentGateway = new PaymentGateway();
 
-        supply_chain.gridPaneFooter.getChildren().remove(supply_chain.FooterInfo);
-        supply_chain.gridPaneFooter.getChildren().remove(supply_chain.FooterAskLogin);
-        supply_chain.gridPaneFooter.getChildren().remove(supply_chain.customerCareInfo1);
-        supply_chain.gridPaneFooter.getChildren().remove(supply_chain.customerCareInfo2);
-        supply_chain.gridPaneFooter.getChildren().remove(supply_chain.customerCareInfo3);
+            if (cartIsOpen){ // place all the order in table. create DB for cart to keep track of on cart items
+                ResultSet cartData = cart.getCartData(Login.email);
+                if(cartData == null) {
+                    System.out.println("data no found in result set");
+                    updateStatus.setText("Order not placed issue");
+                    updateStatus.setTextFill(Color.RED);
+                }
+                else{
+                    if(cart.placeMyOrder(cartData)) {
+                        updateStatus.setText("Order Placed");
+                        updateStatus.setTextFill(Color.BLACK);
+                    }
+                }
+            }
+            else if(selected == null){
+                updateStatus.setText("Select item from table");
+                updateStatus.setTextFill(Color.RED);
+            }
+            else if(order.placeOrder(email,selected)){
+                updateStatus.setText("Order placed");
+                updateStatus.setTextFill(Color.BLACK);
+            }else{
+                updateStatus.setText("Order Failed");
+                updateStatus.setTextFill(Color.RED);
+            }
+        });
+
+        supply_chain.gridPaneFooter.getChildren().removeAll(supply_chain.FooterInfo,supply_chain.FooterAskLogin,supply_chain.customerCareInfo1,supply_chain.customerCareInfo2,supply_chain.customerCareInfo3);
         supply_chain.gridPaneFooter.add(addToCart,0,0);
         supply_chain.gridPaneFooter.add(buyNow,1,0);
         supply_chain.gridPaneFooter.add(openCart,2,0);
@@ -223,6 +238,7 @@ public class Login {
             supply_chain.bodyPane.getChildren().clear();
             ProductDetails productDetails = new ProductDetails();
             allProductDetails = productDetails.getAllProducts();
+            supply_chain.bodyPane.getChildren().clear();
             supply_chain.bodyPane.getChildren().add(allProductDetails);
             emailField.clear();
             passwordField.clear();
