@@ -28,6 +28,7 @@ import java.io.IOException;
 public class supply_chain extends Application {
     static Pane basePane;
     public static final int width = 928, height = 500, headerBarsize = 50;
+    static Scene scene;
     static Pane root;
     static Pane bodyPane = new Pane();
     static Pane restoreHome = new Pane();
@@ -91,9 +92,6 @@ public class supply_chain extends Application {
         loginImage.setOnMouseClicked(new EventHandler<MouseEvent>() {
             @Override
             public void handle(MouseEvent mouseEvent) {
-                BackgroundImage myBg = new BackgroundImage(new Image("C:\\Users\\Dpk\\Desktop\\Java\\supply_managment\\src\\images\\home_main_3.jpg",width,height + headerBarsize,false,true),BackgroundRepeat.NO_REPEAT, BackgroundRepeat.NO_REPEAT,BackgroundPosition.DEFAULT,BackgroundSize.DEFAULT);
-                root.setBackground(new Background(myBg));
-                bodyPane.getChildren().clear();
                 try{
                     bodyPane.getChildren().add(Login.loginPage());
                 }catch (Exception e){
@@ -219,7 +217,7 @@ public class supply_chain extends Application {
         scrollPane.setHbarPolicy(ScrollPane.ScrollBarPolicy.AS_NEEDED);
         scrollPane.setVbarPolicy(ScrollPane.ScrollBarPolicy.AS_NEEDED);
 
-        Scene scene = new Scene(scrollPane);
+         scene = new Scene(scrollPane);
         stage.setTitle("My Shopping!");
         stage.setScene(scene);
         stage.show();

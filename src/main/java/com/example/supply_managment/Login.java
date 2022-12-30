@@ -181,6 +181,10 @@ public class Login {
         updateStatus.setTranslateY(10);
     }
     public static Pane loginPage() throws FileNotFoundException {
+        BackgroundImage myBg = new BackgroundImage(new Image("C:\\Users\\Dpk\\Desktop\\Java\\supply_managment\\src\\images\\home_main_3.jpg",supply_chain.width,supply_chain.height + supply_chain.headerBarsize,false,true),BackgroundRepeat.NO_REPEAT, BackgroundRepeat.NO_REPEAT,BackgroundPosition.DEFAULT,BackgroundSize.DEFAULT);
+        supply_chain.root.setBackground(new Background(myBg));
+        supply_chain.bodyPane.getChildren().clear();
+
         Label email = new Label("Email");
         Label passwordLabel = new Label("Password");
         Image lock = new Image(new FileInputStream("C:\\Users\\Dpk\\Desktop\\Java\\supply_managment\\src\\images\\login_1.png"));

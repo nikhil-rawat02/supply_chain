@@ -3,18 +3,23 @@ package com.example.supply_managment;
 import javafx.event.ActionEvent;
 import javafx.event.EventHandler;
 import javafx.geometry.Pos;
-import javafx.scene.control.Button;
-import javafx.scene.control.Label;
-import javafx.scene.control.PasswordField;
-import javafx.scene.control.TextField;
+import javafx.scene.Scene;
+import javafx.scene.control.*;
 import javafx.scene.layout.GridPane;
 import javafx.scene.layout.Pane;
 import javafx.scene.paint.Color;
 import javafx.scene.text.Font;
 import javafx.scene.text.FontPosture;
 import javafx.scene.text.FontWeight;
+import javafx.stage.Modality;
+import javafx.stage.Stage;
+
+import java.util.Objects;
+
 public class SignUp {
     public static Pane signUpPage(){
+        GridPane gridPane = new GridPane();
+
         Label signup = new Label("Sign Up");
         Label text = new Label("It's quick and easy.");
         Label nameLabel = new Label("Name : ");
@@ -47,8 +52,7 @@ public class SignUp {
                 DatabaseConnection databaseConnection = new DatabaseConnection();
                 CustomerDetails customerDetails = new CustomerDetails();
                 addtional_function addfnc = new addtional_function();
-                String query = String.format("INSERT INTO CUSTOMER (email,password,first_name,last_name,address,mobile) values ('%s','%s','%s','%s','%s','%s')",email.getText(),addfnc.updateInDB(password.getText()),name.getText(),lastName.getText(),address.getText(),mobile.getText());
-                int rowCount = 0;
+
                 // check email exist in db or not
                 if (name.getText().trim().isEmpty() || email.getText().trim().isEmpty()
                         || mobile.getText().trim().isEmpty() || password.getText().trim().isEmpty()) {
@@ -56,13 +60,61 @@ public class SignUp {
                     status.setTextFill(Color.RED);
                 } else if (!customerDetails.checkEmailInDB(email.getText())) {
                     status.setText("this email-Id is already registered");
-                } else {
-                    try {
-                        rowCount = databaseConnection.executeUpdateQuery(query);
-                    }catch (Exception e) {
-                        e.printStackTrace();
-                    }
-                    if (rowCount != 0) status.setText("new Account created now try login");
+                }
+                 else
+                {
+                    // on click of submit popup window in body pane to verify Otp
+                    TextField enterOtp = new TextField();
+                    enterOtp.setPromptText("Enter otp");
+                    Button button = new Button("Submit");
+                    Hyperlink login = new Hyperlink("Login");
+                    login.setFont(Font.font("MingLiU", FontWeight.BOLD, FontPosture.REGULAR,14));
+                    SendOTP sndotp = new SendOTP();
+                    gridPane.getChildren().clear();
+                    gridPane.add(enterOtp,0,0);
+                    gridPane.add(button,0,1);
+                    gridPane.add(status,0,2);
+
+
+                    gridPane.setAlignment(Pos.CENTER);
+                    GridPane.setColumnSpan(status,3);
+                    String actualOtp = sndotp.signupOTP(mobile.getText());
+                    button.setOnAction(new EventHandler<ActionEvent>() {
+                        @Override
+                        public void handle(ActionEvent actionEvent) {
+                            gridPane.add(login,3,2);
+                            String query = String.format("INSERT INTO CUSTOMER (email,password,first_name,last_name,address,mobile) values ('%s','%s','%s','%s','%s','%s')",email.getText(),addfnc.updateInDB(password.getText()),name.getText(),lastName.getText(),address.getText(),mobile.getText());
+                            int rowCount = 0;
+                            if(Objects.equals(enterOtp.getText(),actualOtp )){
+
+                                try {
+                                    rowCount = databaseConnection.executeUpdateQuery(query);
+                                }catch (Exception e) {
+                                    e.printStackTrace();
+                                }
+                                if (rowCount != 0){
+                                    button.setDisable(true);
+                                    enterOtp.clear();
+                                    status.setText("new Account created now try");
+                                    status.setFont(Font.font("MingLiU", FontWeight.BOLD, FontPosture.REGULAR,14));
+                                }
+                            }else{
+                                status.setText("enter valid otp");
+                                status.setTextFill(Color.RED);
+                            }
+                        }
+                    });
+                    login.setOnAction(new EventHandler<ActionEvent>() {
+                        @Override
+                        public void handle(ActionEvent actionEvent) {
+                            try{
+                                supply_chain.bodyPane.getChildren().add(Login.loginPage());
+                            }catch (Exception e){
+                                e.printStackTrace();
+                            }
+
+                        }
+                    });
                 }
             }
         });
@@ -78,7 +130,7 @@ public class SignUp {
                 status.setText("");
             }
         });
-        GridPane gridPane = new GridPane();
+
 
         gridPane.setMinSize(supply_chain.bodyPane.getMinWidth(), supply_chain.bodyPane.getMinHeight());
         gridPane.setHgap(10);
@@ -120,5 +172,9 @@ public class SignUp {
         gridPane.add(status, 0, 9);
 
         return gridPane;
+    }
+    public static Pane otpWindow(){
+        Pane pane = new Pane();
+        return pane;
     }
 }
