@@ -7,11 +7,21 @@ import java.util.Objects;
 import java.util.regex.Matcher;
 import java.util.regex.Pattern;
 
-public class addtional_function {
+public class additional_function {
+    /* this class is used to keep additional functionalities
+    separate from the application code there are two
+    functionality has been added one is validate Email and
+    password encryption and password decryption
+     */
     public boolean validateEmail(String email){
-        // regular expression
+        /*There are different ways through which we can perform
+        email validation using a regular expression.
+       and here I have used The Simplest regex to validate email.
+       The regular expression ^(.+)@(.+)$ is the simplest regular
+       expression the checks the @ symbol only. It doesn't care
+       about the characters before and after the '@' symbol.
+       */
         String regex = "^(.+)@(.+)$";
-        //Compile regular expression to get the pattern
         Pattern pattern = Pattern.compile(regex);
         Matcher matcher = pattern.matcher(email);
         return  matcher.matches();
@@ -25,7 +35,10 @@ public class addtional_function {
         }
         return null;
     }
-    private String getEncrptedPassword(String password){
+    private String getEncryptedPassword(String password){
+        /* getEncryptedPassword method will convert encrypted
+            password in 16 length encrypted password
+             */
         try{
             BigInteger number = new BigInteger(1, Objects.requireNonNull(getSHA(password)));
             StringBuilder hexString = new StringBuilder(number.toString(16));
@@ -36,9 +49,9 @@ public class addtional_function {
         return  null;
     }
     public String updateInDB (String password){
-        return getEncrptedPassword(password);
-    }
-    public static void main(String[] args) {
-
+        /* updateInDB method will return the password in
+        encrypted from using getEncryptedPassword method
+         */
+        return getEncryptedPassword(password);
     }
 }

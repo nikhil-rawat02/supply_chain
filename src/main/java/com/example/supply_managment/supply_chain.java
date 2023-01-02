@@ -3,50 +3,56 @@ package com.example.supply_managment;
 import javafx.application.Application;
 import javafx.event.ActionEvent;
 import javafx.event.EventHandler;
-import javafx.geometry.HPos;
-import javafx.geometry.Insets;
 import javafx.geometry.Pos;
-import javafx.scene.Group;
 import javafx.scene.Scene;
 import javafx.scene.control.*;
 import javafx.scene.image.ImageView;
 import javafx.scene.input.KeyCode;
 import javafx.scene.input.MouseEvent;
 import javafx.scene.layout.*;
-import javafx.scene.paint.Color;
 import javafx.scene.text.Font;
 import javafx.scene.text.FontPosture;
-import javafx.scene.text.FontSmoothingType;
 import javafx.scene.text.FontWeight;
 import javafx.stage.Stage;
 import javafx.scene.image.Image;
-
 import java.io.FileInputStream;
 import java.io.FileNotFoundException;
 import java.io.IOException;
 
 public class supply_chain extends Application {
-    static Pane basePane;
+    /* supply chain class is the main class where whole pane/ window has been divided into three part
+    1. header Pane 2. Body Pane and 3. Footer Pane
+    Header Pane , body pane and footer pane contains all the contents i.e. buttons, images, hyperlink etc. that has been located on respective pane
+ */
     public static final int width = 928, height = 500, headerBarsize = 50;
     static Scene scene;
     static Pane root;
     static Pane bodyPane = new Pane();
     static Pane restoreHome = new Pane();
-    public static GridPane gridPaneHeader = new GridPane();
-    public static GridPane gridPaneFooter = new GridPane();
-    public static Label FooterInfo;
-    public static Label FooterAskLogin;
-    public static Label customerCareInfo1;
-    public static Label customerCareInfo2;
-    public static Label customerCareInfo3;
-    public static TextField searchText;
-    public static Button searchButton;
-    public static Image loginImg;
-    public static ImageView loginImage;
-    public static  Label preSignUp;
-    public static Hyperlink signup;
+    static GridPane gridPaneHeader = new GridPane();
+    static GridPane gridPaneFooter = new GridPane();
+    static Label FooterInfo;
+    static Label FooterAskLogin;
+    static Label customerCareInfo1;
+    static Label customerCareInfo2;
+    static Label customerCareInfo3;
+    static TextField searchText;
+    static Button searchButton;
+    static Image loginImg;
+    static ImageView loginImage;
+    static  Label preSignUp;
+    static Hyperlink signup;
     ProductDetails productDetails= new ProductDetails();
+
     public GridPane headerBar() throws FileNotFoundException {
+        /* this is the method that loads the whole header bar
+        into header pane this method contains text fields to
+        take input from user for search of particular product,
+        search button to search for particular product mentioned
+        in search textfield, image name login is used to redirect
+         from home to user login page, HyperLink Signup is also
+         used to redirect from home to Signup page.
+         */
         searchText = new TextField();
         searchButton= new Button("Search");
         preSignUp= new Label("Not a member?");
@@ -57,6 +63,11 @@ public class supply_chain extends Application {
         ImageView imageViewSmallLogo = new ImageView(smallLogo);
 
         searchText.setOnKeyPressed(keyEvent -> {
+            /* search text field has been set on action
+            when user press enter content mentioned in
+            search text filed will be set to search for
+             particular/ related product.
+             */
             if(keyEvent.getCode().equals(KeyCode.ENTER)){
                 String productName = searchText.getText();
                 if(searchText.getText().isEmpty()){
@@ -68,6 +79,10 @@ public class supply_chain extends Application {
             }
         });
         searchButton.setOnAction(new EventHandler<ActionEvent>() {
+            /* search button has been set on action when user click
+            on button using mouse content mentioned in search text
+            filed will be set to search for particular/ related product.
+             */
             @Override
             public void handle(ActionEvent actionEvent) {
                 String productName = searchText.getText();
@@ -80,6 +95,11 @@ public class supply_chain extends Application {
             }
         });
         signup.setOnAction(new EventHandler<ActionEvent>() {
+            /* signup Hyperlink has been set on action to set clear previous body pane
+            content and load it with signup page.
+            sign up page details will be fetched from signUpPage method from SignUp class and
+            set it on body pane
+             */
             @Override
             public void handle(ActionEvent actionEvent) {
                 BackgroundImage myBg = new BackgroundImage(new Image("C:\\Users\\Dpk\\Desktop\\Java\\supply_managment\\src\\images\\sign_up1.png",width,height + headerBarsize,false,true),BackgroundRepeat.NO_REPEAT, BackgroundRepeat.NO_REPEAT,BackgroundPosition.DEFAULT,BackgroundSize.DEFAULT);
@@ -100,6 +120,14 @@ public class supply_chain extends Application {
 
             }
         });
+
+        GridPane headerPane = new GridPane();
+
+        /* After initializing Grid pane for header,
+         CSS styling of all children's of header
+         pane and adding then into header pane
+        */
+        headerPane.setMinSize(width, headerBarsize);
         searchText.setTranslateX(280);
         searchButton.setTranslateX(300);
         loginImage.setTranslateX(348);
@@ -109,16 +137,10 @@ public class supply_chain extends Application {
         imageViewSmallLogo.setFitWidth(headerBarsize);
         loginImage.setFitHeight(headerBarsize*2);
         loginImage.setFitWidth(120);
-
         loginImage.setPreserveRatio(true);
         imageViewSmallLogo.setPreserveRatio(true);
-
         preSignUp.setFont(Font.font("MingLiU", FontWeight.BOLD, FontPosture.REGULAR,14));
         signup.setFont(Font.font("MingLiU", FontWeight.BOLD, FontPosture.REGULAR,14));
-
-        GridPane headerPane = new GridPane();
-        headerPane.setMinSize(width, headerBarsize);
-
         headerPane.setVgap(5);
         headerPane.setHgap(5);
         headerPane.setStyle("-fx-background-color : #336699;");
@@ -132,7 +154,13 @@ public class supply_chain extends Application {
 
         return headerPane;
     }
+
     private GridPane footerBar(){
+        /* this is the method that loads the whole footer bar
+        into footer pane this method contains Labels and to
+        give good suggestion for how to use this web and
+        contact details
+         */
         FooterInfo = new Label();
         FooterAskLogin = new Label();
         customerCareInfo1 = new Label();
@@ -165,6 +193,9 @@ public class supply_chain extends Application {
         return footerPane;
     }
     private GridPane homePage(){
+        /* this method load the home page as soon as the application
+         runs and after user logged out from the session
+         */
         Label homeMessage1 = new Label("Welcome to My Shopping! ");
         Label homeMessage2 = new Label("One of the best upcoming commercial website ");
         Label homeMessage3 = new Label("So what are you waiting for?");
@@ -172,7 +203,6 @@ public class supply_chain extends Application {
 
         GridPane gridPane = new GridPane();
         gridPane.setAlignment(Pos.CENTER);
-
         homeMessage1.setFont(Font.font("sin script", FontWeight.BOLD, FontPosture.ITALIC,27));
         homeMessage2.setFont(Font.font("sin script", FontWeight.BOLD, FontPosture.ITALIC,27));
         homeMessage3.setFont(Font.font("sin script", FontWeight.BOLD, FontPosture.ITALIC,27));
@@ -183,15 +213,14 @@ public class supply_chain extends Application {
         gridPane.add(homeMessage3,0,3);
         gridPane.add(homeMessage4,0,4);
 
-
         return gridPane;
     }
     private Pane createContent() throws FileNotFoundException {
+        /* createContent method is used to initialize header bar,
+         footer bar and home page and assign from to respective pane */
         root = new Pane();
         BackgroundImage myBg = new BackgroundImage(new Image("C:\\Users\\Dpk\\Desktop\\Java\\supply_managment\\src\\images\\home_main.png",width,height + headerBarsize,false,true),BackgroundRepeat.NO_REPEAT, BackgroundRepeat.NO_REPEAT,BackgroundPosition.DEFAULT,BackgroundSize.DEFAULT);
         root.setBackground(new Background(myBg));
-
-        // basic home page main head and foot pane enable
         root.setPrefSize(width, headerBarsize*2 +height);
 
         gridPaneHeader.setMinSize(width, headerBarsize);
@@ -211,7 +240,10 @@ public class supply_chain extends Application {
     }
     @Override
     public void start(Stage stage) throws IOException {
-
+        /* all the application content has been initialized
+        by calling create content method and assigned it to
+         scroll pane due to necessary of scroll bar to adjust
+         window size as needed*/
         ScrollPane scrollPane = new ScrollPane(createContent());
         scrollPane.setPrefSize(width+2, height + 2*headerBarsize + 2);
         scrollPane.setHbarPolicy(ScrollPane.ScrollBarPolicy.AS_NEEDED);

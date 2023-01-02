@@ -11,16 +11,18 @@ import javafx.scene.paint.Color;
 import javafx.scene.text.Font;
 import javafx.scene.text.FontPosture;
 import javafx.scene.text.FontWeight;
-
 import java.sql.ResultSet;
-import java.sql.Statement;
-
-import static com.example.supply_managment.DatabaseConnection.getStatement;
-
 public class AddProductDetails {
-    String productName;
+    /* if login person has admin rights then admin can
+    add/ update product available quantity as well as
+    price of product by using product id. this class will
+    handle add all the transaction related to product update details.
+    */
     DatabaseConnection dbConn = new DatabaseConnection();
     public Pane addProduct(){
+        /* addProduct method will load all the content
+        of add product page into body pane
+        */
         Label heading = new Label(" Update Product Details in DataBase ");
         Label product_id = new Label("Product Id ");
         Label quantity = new Label("Quantity");
@@ -115,10 +117,13 @@ public class AddProductDetails {
         return gridPane;
     }
     private boolean checkProductId(String productId){
+        /* this method will check if product id is
+        present in database and return its availability
+        in boolean form */
 
         String query = String.format("SELECT productId from product where productId = %d",Integer.parseInt(productId));
         try{
-            ResultSet rs = dbConn.getQuerryTable(query);
+            ResultSet rs = dbConn.getQueryTable(query);
             if(rs != null && rs.next())return  true;
         }catch (Exception e){
             e.printStackTrace();

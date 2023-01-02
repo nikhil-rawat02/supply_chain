@@ -1,6 +1,5 @@
 package com.example.supply_managment;
 
-import javafx.collections.ObservableList;
 import javafx.geometry.Insets;
 import javafx.scene.control.Button;
 import javafx.scene.control.Label;
@@ -14,12 +13,13 @@ import javafx.scene.paint.Color;
 import javafx.scene.text.Font;
 import javafx.scene.text.FontPosture;
 import javafx.scene.text.FontWeight;
-
 import java.io.FileInputStream;
 import java.io.FileNotFoundException;
 import java.sql.ResultSet;
-
 public class Login {
+    /* login class provide user to get access to buy and
+     * add product in cart and other functionality as well
+     */
     static Button addToCart = new Button("Add to Cart");
     static Button buyNow = new Button("Buy Now");
     static Button openCart = new Button("My Cart");
@@ -28,19 +28,19 @@ public class Login {
     static Button loginButton = new Button("Login");
     static Label updateStatus = new Label(); // to display message if order placed or add to cart
     static String email;
-    static String userMobileNumber;
     static boolean adminLoggedIn = false;
     static TextField emailField = new TextField();
     static PasswordField passwordField = new PasswordField();
     static Label messageLabel = new Label();
     static Pane allProductDetails = new Pane();
     static Pane addPdDetails = new Pane();
-    public static DatabaseConnection databaseConnection = new DatabaseConnection();
+    static CustomerDetails customerDetails = new CustomerDetails();
     Cart cart = new Cart();
-
-
     static void updateHeader(){
-        // if user has admin right add new function to open window to add product in db
+        /* updateHeader method update the header after user logged in successfully in application.
+         * if user logged in successfully there will be different items on header considering user access level
+         * if user is normal user they will get logout option and if usr has admin right the there will be two   option one is to update data in current database and other is to check current status of product that are available in database
+         */
         Image addPd = new Image("C:\\Users\\Dpk\\Desktop\\Java\\supply_managment\\src\\images\\addPd.png"); // update new input stream
         ImageView imageViewaddPd = new ImageView(addPd);
         Image pdList = new Image("C:\\Users\\Dpk\\Desktop\\Java\\supply_managment\\src\\images\\product_list.png");
@@ -48,7 +48,7 @@ public class Login {
         Image logout = new Image("C:\\Users\\Dpk\\Desktop\\Java\\supply_managment\\src\\images\\logout_final.png");
         ImageView imageViewLogout = new ImageView(logout);
 
-        if(databaseConnection.getUserAccessCode(email)){
+        if(customerDetails.getUserAccessCode(email)){
             adminLoggedIn = true;
             // give access to add products and view all products
             supply_chain.gridPaneHeader.add(imageViewaddPd,2,0);
@@ -133,7 +133,6 @@ public class Login {
                 Cart selectedProduct = cart.getSelectedProduct();
                 boolean cartUpdated  = cart.removeFromCart(email,selectedProduct.getProductId());
                 if(cartUpdated) updateStatus.setText("Selected Item remove from cart");
-                // if cart qty is 0 remove from cart DB
             }
         });
         buyNow.setOnAction(actionEvent -> {
@@ -154,7 +153,7 @@ public class Login {
                         updateStatus.setTextFill(Color.BLACK);
                     }
                     SendOTP sndotp =  new SendOTP();
-                    String number = databaseConnection.getUserNumber(email);
+                    String number = customerDetails.getUserNumber(email);
                     if(number == null){
                         System.out.println("check result set");
                     }else{
@@ -238,12 +237,11 @@ public class Login {
      void getLoggedIn(){
         email = emailField.getText();
         String password = passwordField.getText();
-        addtional_function addtional_functions = new addtional_function();
-        CustomerDetails customerDetails = new CustomerDetails();
-        if(!addtional_functions.validateEmail(email) || customerDetails.checkEmailInDB(email)){
+        additional_function additional_functions = new additional_function();
+        if(!additional_functions.validateEmail(email) || customerDetails.checkEmailInDB(email)){
             messageLabel.setText("Enter valid email id!");
             messageLabel.setTextFill(Color.RED);
-        }else if (customerDetails.customerLogin(email,addtional_functions.updateInDB(password))){
+        }else if (customerDetails.customerLogin(email, additional_functions.updateInDB(password))){
             messageLabel.setText("Login Successful");
             messageLabel.setTextFill(Color.BLACK);
             loginButton.setDisable(true);
@@ -267,12 +265,9 @@ public class Login {
         }else if(passwordField.getText().isEmpty()){
              messageLabel.setText("Password field cannot be empty, Enter Password");
              messageLabel.setTextFill(Color.RED);
-         }else{
+        }else{
              messageLabel.setText("Credential failed,Please enter correct password");
              messageLabel.setTextFill(Color.RED);
-         }
-    }
-    public static void main(String[] args) {
-
+        }
     }
 }

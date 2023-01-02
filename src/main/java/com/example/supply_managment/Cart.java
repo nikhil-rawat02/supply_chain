@@ -9,100 +9,47 @@ import javafx.scene.control.TableColumn;
 import javafx.scene.control.TableView;
 import javafx.scene.control.cell.PropertyValueFactory;
 import javafx.scene.layout.Pane;
-import javax.sql.StatementEvent;
 import java.sql.ResultSet;
-import java.sql.Statement;
 
 public class Cart {
-
+    /* Cart class used to gather all the product that has been added by user in cart
+    so that user can purchase all selected product at once.
+     */
     public static  TableView<Cart> productTableView;
     ObservableList <Cart> products;
     DatabaseConnection dBCon = new DatabaseConnection();
-
     private SimpleStringProperty name;
     private SimpleStringProperty productDetails;
     private SimpleIntegerProperty productId;
     private SimpleStringProperty supplier;
     private SimpleDoubleProperty price;
     private SimpleIntegerProperty product_quantity_incart;
-
-    public String getName() {
-        return name.get();
-    }
-
-    public SimpleStringProperty nameProperty() {
-        return name;
-    }
-
-    public void setName(String name) {
-        this.name.set(name);
-    }
-
-    public int getProductId() {
-        return productId.get();
-    }
-
-    public SimpleIntegerProperty productIdProperty() {
-        return productId;
-    }
-
-    public void setProductId(int productId) {
-        this.productId.set(productId);
-    }
-
-    public String getProductDetails() {
-        return productDetails.get();
-    }
-
-    public SimpleStringProperty productDetailsProperty() {
-        return productDetails;
-    }
-
-    public void setProductDetails(String productDetails) {
-        this.productDetails.set(productDetails);
-    }
-
-    public String getSupplier() {
-        return supplier.get();
-    }
-
-    public SimpleStringProperty supplierProperty() {
-        return supplier;
-    }
-
-    public void setSupplier(String supplier) {
-        this.supplier.set(supplier);
-    }
-
-    public double getPrice() {
-        return price.get();
-    }
-
-    public SimpleDoubleProperty priceProperty() {
-        return price;
-    }
-
-    public void setPrice(double price) {
-        this.price.set(price);
-    }
-
-
-    public int getProduct_quantity_incart() {
-        return product_quantity_incart.get();
-    }
-
-    public SimpleIntegerProperty product_quantity_incartProperty() {
-        return product_quantity_incart;
-    }
-
+    public String getName() {return name.get();}
+    public SimpleStringProperty nameProperty() {return name;}
+    public void setName(String name) {this.name.set(name);}
+    public int getProductId() {return productId.get();}
+    public SimpleIntegerProperty productIdProperty() {return productId;}
+    public void setProductId(int productId) {this.productId.set(productId);}
+    public String getProductDetails() {return productDetails.get();}
+    public SimpleStringProperty productDetailsProperty() {return productDetails;}
+    public void setProductDetails(String productDetails) {this.productDetails.set(productDetails);}
+    public String getSupplier() {return supplier.get();}
+    public SimpleStringProperty supplierProperty() {return supplier;}
+    public void setSupplier(String supplier) {this.supplier.set(supplier);}
+    public double getPrice() {return price.get();}
+    public SimpleDoubleProperty priceProperty() {return price;}
+    public void setPrice(double price) {this.price.set(price);}
+    public int getProduct_quantity_incart() {return product_quantity_incart.get();}
+    public SimpleIntegerProperty product_quantity_incartProperty() {return product_quantity_incart;}
     public void setProduct_quantity_incart(int product_quantity_incart) {
         this.product_quantity_incart.set(product_quantity_incart);
     }
-
-    Cart(){
-
-    }
+    Cart(){}
     public Cart(String name, String productDetails,String supplier,double price, int product_quantity_incart){
+        /* Cart class constructed to create new Cart object with
+        product name, product details, supplier name, product price,
+        total quantity
+        */
         this.name = new SimpleStringProperty(name);
         this.productDetails = new SimpleStringProperty(productDetails);
         this.supplier = new SimpleStringProperty(supplier);
@@ -110,6 +57,10 @@ public class Cart {
         this.product_quantity_incart = new SimpleIntegerProperty(product_quantity_incart);
     }
     public Cart getSelectedProduct(){
+        /* getSelectedProduct method return the selected cart
+        item from table when user has selected a product either
+        to remove it from cart or proceed for buying
+        */
         try {
             return productTableView.getSelectionModel().getSelectedItem();
         }catch (Exception e){
@@ -118,6 +69,7 @@ public class Cart {
         return null;
     }
     public boolean placeMyOrder(ResultSet rs){
+        /* placeMyOrder method booked all the order that placed by user */
         boolean orderPlaced = false;
         try {
             while (rs.next()){
@@ -131,10 +83,7 @@ public class Cart {
         }catch (Exception e){
             e.printStackTrace();
         }
-        // update time stamp
-        // update remaining product qty in database
         try{
-            System.out.println("p");
             while(rs.next()){
                 int productID = rs.getInt("product_ID");
                 int qty = rs.getInt("product_quantity_incart");
@@ -148,9 +97,13 @@ public class Cart {
         return orderPlaced;
     }
     public ResultSet getCartData(String email){
+        /* getCartData method return the result set of all the
+        product that has been added by user in cart and not
+        purchased yet.
+         */
         String query = String.format("SELECT product_ID,customer_ID,product_quantity_incart FROM product p Inner JOIN cart c on p.productId = c.product_ID AND customer_ID = (SELECT customerId FROM customer WHERE email = '%s')",email);
         try{
-            return dBCon.getQuerryTable(query);
+            return dBCon.getQueryTable(query);
         }catch (Exception e){
             e.printStackTrace();
         }
@@ -160,7 +113,7 @@ public class Cart {
         ObservableList<Cart> productList = FXCollections.observableArrayList();
         String query = String.format("SELECT name,Product_Details,supplier,price,product_quantity_incart FROM product p Inner JOIN cart c on p.productId = c.product_ID AND customer_ID = (SELECT customerId FROM customer WHERE email = '%s')",email);// user inner join to get quantity
         try {
-            ResultSet rs = dBCon.getQuerryTable(query);
+            ResultSet rs = dBCon.getQueryTable(query);
             while(rs.next()){
                 productList.add(
                         new Cart(
@@ -177,12 +130,11 @@ public class Cart {
         }
         return productList;
     }
-
     public boolean isPresentInDB(int productId){
-        // enter query to check if product id present or not
+        /* isPresentInDB method return if product Id id present in cart */
         String query  =String.format("SELECT * FROM cart WHERE product_ID = %d", productId);
         try {
-            ResultSet rs = dBCon.getQuerryTable(query);
+            ResultSet rs = dBCon.getQueryTable(query);
             if(rs!=null && rs.next())return true;
 
         }catch(Exception e){
@@ -191,8 +143,11 @@ public class Cart {
         return false;
     }
     public boolean checkqty(String email,int productId){
+        /* checkqty method check if quantity of selected product
+        is zero or not if it is zero then delete selected product from cart database
+        */
         String query = String.format("DELETE FROM cart WHERE (product_quantity_incart = 0 AND product_ID = %d AND customer_ID = (SELECT customerId FROM customer WHERE email = '%s'))",productId,email);
-        ResultSet rs = dBCon.getQuerryTable(query);
+        ResultSet rs = dBCon.getQueryTable(query);
         try {
             if(rs != null || rs.next())return true;
         }catch (Exception e){
@@ -202,7 +157,7 @@ public class Cart {
     }
     public boolean removeFromCart(String email, int productId){
         String query = String.format("UPDATE cart SET product_quantity_incart = product_quantity_incart -1 WHERE (customer_id =(SELECT customerId FROM customer WHERE email = '%s') and product_id = %d)",email,productId);
-        ResultSet rs = dBCon.getQuerryTable(query);
+        ResultSet rs = dBCon.getQueryTable(query);
         boolean check = false;
         try {
             if(rs != null || rs.next())check = true;
@@ -222,11 +177,8 @@ public class Cart {
         }
         return check;
     }
-    // selected product to be updated in cart table database
     public boolean addToCartSelectedProduct(String email, int productId){
-        // if productId is already present in cart table database
-        if(isPresentInDB(productId)){ // update qty in cart db
-
+        if(isPresentInDB(productId)){
             String query = String.format("UPDATE cart SET product_quantity_incart = product_quantity_incart +1 WHERE (customer_id =(SELECT customerId FROM customer WHERE email = '%s') and product_id = %d)",email,productId);
             int rowCount = 0;
             try {
@@ -235,7 +187,7 @@ public class Cart {
                 e.printStackTrace();
             }
             return rowCount != 0;
-        }else{ // insert into cart db
+        }else{
             String query = String.format("INSERT INTO cart (customer_ID, product_ID) VALUES ((SELECT customerId FROM customer WHERE email = '%s'),%d)", email,productId);
             int rowCount = 0;
             try{
@@ -247,7 +199,7 @@ public class Cart {
         }
     }
     public Pane getOrderProduct(String email){
-        //fetch data from cart table DB rewrite below code
+        /* getOrderProduct method fetch data from cart Database */
         TableColumn name = new TableColumn("Product Name");
         name.setCellValueFactory(new PropertyValueFactory<>("name"));
         TableColumn details = new TableColumn<>("Product Details");
@@ -272,11 +224,10 @@ public class Cart {
         tablePane.getChildren().add(productTableView);
         return tablePane;
     }
-    public String getOrderName(ResultSet rs){
-        // from result set get product id and with the help of product id get product name form DB and retun concat string
-        return null;
-    }
     public void removeAllFromCart(String email){
+        /* removeAllFromCart method removes all the
+        data of usr from the cart after all order placed
+        */
         String query = String.format("DELETE FROM cart WHERE customer_ID = (SELECT customerId FROM customer WHERE email = '%s')",email);
         try {
             dBCon.executeUpdateQuery(query);

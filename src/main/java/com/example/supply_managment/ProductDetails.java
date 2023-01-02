@@ -1,19 +1,12 @@
 package com.example.supply_managment;
 
-import javafx.beans.Observable;
-import javafx.beans.property.SimpleDoubleProperty;
-import javafx.beans.property.SimpleIntegerProperty;
-import javafx.beans.property.SimpleStringProperty;
-import javafx.collections.FXCollections;
 import javafx.collections.ObservableList;
 import javafx.scene.control.TableColumn;
 import javafx.scene.control.TableView;
 import javafx.scene.control.cell.PropertyValueFactory;
 import javafx.scene.layout.Pane;
-
 public class ProductDetails {
    public static TableView<Product> productTable;
-
     public Pane getAllProducts(){
         TableColumn<Product,Integer> id = new TableColumn<>("id");
         id.setCellValueFactory(new PropertyValueFactory<Product,Integer>("id"));
@@ -45,7 +38,6 @@ public class ProductDetails {
         tablePane.getChildren().add(productTable);
         return tablePane;
     }
-
     public Pane getProductsByName(String productByName){
         TableColumn id = new TableColumn("id");
         id.setCellValueFactory(new PropertyValueFactory<>("id"));
@@ -59,8 +51,6 @@ public class ProductDetails {
         supplier.setCellValueFactory(new PropertyValueFactory<>("supplier"));
         TableColumn quantity = new TableColumn<>("Quantity");
         quantity.setCellValueFactory(new PropertyValueFactory<>("qantity"));
-
-
 
         ObservableList<Product> products = Product.getProductByName(productByName);
         productTable = new TableView<>();
@@ -78,8 +68,6 @@ public class ProductDetails {
         tablePane.getChildren().add(productTable);
         return tablePane;
     }
-
-
     public Product getSelectedProduct(){
        try {
            return productTable.getSelectionModel().getSelectedItem();
@@ -88,9 +76,4 @@ public class ProductDetails {
        }
        return null;
     }
-    public Product getAllProductFromCart (){
-
-        return null;
-    }
-
 }

@@ -14,7 +14,6 @@ public class PaymentGateway {
     public void createCustomer() throws StripeException {
 
     }
-
     public static void main(String[] args) throws StripeException {
 //        PaymentGateway paymentGateway = new PaymentGateway();
         Stripe.apiKey = "sk_test_51MJxa2SIb68XWXR0uZNNP8z8QCTsoLjKkwyEWJcoCXCPHZJqsNIhsTcax7tCsMa9NuSV797jfcwK7BBnlakPtilp0057T99y7R";

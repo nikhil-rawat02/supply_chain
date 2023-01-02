@@ -3,7 +3,6 @@ package com.example.supply_managment;
 import javafx.event.ActionEvent;
 import javafx.event.EventHandler;
 import javafx.geometry.Pos;
-import javafx.scene.Scene;
 import javafx.scene.control.*;
 import javafx.scene.layout.GridPane;
 import javafx.scene.layout.Pane;
@@ -11,11 +10,7 @@ import javafx.scene.paint.Color;
 import javafx.scene.text.Font;
 import javafx.scene.text.FontPosture;
 import javafx.scene.text.FontWeight;
-import javafx.stage.Modality;
-import javafx.stage.Stage;
-
 import java.util.Objects;
-
 public class SignUp {
     public static Pane signUpPage(){
         GridPane gridPane = new GridPane();
@@ -45,15 +40,12 @@ public class SignUp {
         mobile.setPromptText("Valid mobile number");
         address.setPromptText("Residence");
         password.setPromptText("password");
-
         submit.setOnAction(new EventHandler<ActionEvent>() {
             @Override
             public void handle(ActionEvent actionEvent) {
                 DatabaseConnection databaseConnection = new DatabaseConnection();
                 CustomerDetails customerDetails = new CustomerDetails();
-                addtional_function addfnc = new addtional_function();
-
-                // check email exist in db or not
+                additional_function addfnc = new additional_function();
                 if (name.getText().trim().isEmpty() || email.getText().trim().isEmpty()
                         || mobile.getText().trim().isEmpty() || password.getText().trim().isEmpty()) {
                     status.setText("above fields cannot be empty !");
@@ -63,7 +55,6 @@ public class SignUp {
                 }
                  else
                 {
-                    // on click of submit popup window in body pane to verify Otp
                     TextField enterOtp = new TextField();
                     enterOtp.setPromptText("Enter otp");
                     Button button = new Button("Submit");
@@ -74,8 +65,6 @@ public class SignUp {
                     gridPane.add(enterOtp,0,0);
                     gridPane.add(button,0,1);
                     gridPane.add(status,0,2);
-
-
                     gridPane.setAlignment(Pos.CENTER);
                     GridPane.setColumnSpan(status,3);
                     String actualOtp = sndotp.signupOTP(mobile.getText());
@@ -130,8 +119,6 @@ public class SignUp {
                 status.setText("");
             }
         });
-
-
         gridPane.setMinSize(supply_chain.bodyPane.getMinWidth(), supply_chain.bodyPane.getMinHeight());
         gridPane.setHgap(10);
         gridPane.setVgap(10);
@@ -144,7 +131,6 @@ public class SignUp {
         passwordLabel.setFont(Font.font("Arial", FontWeight.BOLD,FontPosture.REGULAR,11));
         addressLabel.setFont(Font.font("Arial", FontWeight.BOLD,FontPosture.REGULAR,11));
         mobileLabel.setFont(Font.font("Arial", FontWeight.BOLD,FontPosture.REGULAR,11));
-
 
         GridPane.setColumnSpan(signup,2);
         GridPane.setColumnSpan(text,2);
@@ -173,8 +159,5 @@ public class SignUp {
 
         return gridPane;
     }
-    public static Pane otpWindow(){
-        Pane pane = new Pane();
-        return pane;
-    }
+
 }
