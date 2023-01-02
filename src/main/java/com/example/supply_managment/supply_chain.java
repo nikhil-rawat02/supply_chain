@@ -20,10 +20,10 @@ import java.io.FileNotFoundException;
 import java.io.IOException;
 
 public class supply_chain extends Application {
-    /* supply chain class is the main class where whole pane/ window has been divided into three part
-    1. header Pane 2. Body Pane and 3. Footer Pane
-    Header Pane , body pane and footer pane contains all the contents i.e. buttons, images, hyperlink etc. that has been located on respective pane
- */
+    /* supply chain class is the main class where whole pane/ window has been divided into three part.
+       1. header Pane 2. Body Pane and 3. Footer Pane.
+       Header Pane , body pane and footer pane contains all the contents i.e. buttons, images, hyperlink etc. that has been located on respective pane.
+     */
     public static final int width = 928, height = 500, headerBarsize = 50;
     static Scene scene;
     static Pane root;
@@ -46,12 +46,12 @@ public class supply_chain extends Application {
 
     public GridPane headerBar() throws FileNotFoundException {
         /* this is the method that loads the whole header bar
-        into header pane this method contains text fields to
-        take input from user for search of particular product,
-        search button to search for particular product mentioned
-        in search textfield, image name login is used to redirect
-         from home to user login page, HyperLink Signup is also
-         used to redirect from home to Signup page.
+           into header pane this method contains text fields to
+           take input from user for search of particular product,
+           search button to search for particular product mentioned
+           in search textfield, image name login is used to redirect
+           from home to user login page, HyperLink Signup is also
+           used to redirect from home to Signup page.
          */
         searchText = new TextField();
         searchButton= new Button("Search");
@@ -64,9 +64,9 @@ public class supply_chain extends Application {
 
         searchText.setOnKeyPressed(keyEvent -> {
             /* search text field has been set on action
-            when user press enter content mentioned in
-            search text filed will be set to search for
-             particular/ related product.
+               when user press enter content mentioned in
+               search text filed will be set to search for
+               particular/ related product.
              */
             if(keyEvent.getCode().equals(KeyCode.ENTER)){
                 String productName = searchText.getText();
@@ -80,8 +80,8 @@ public class supply_chain extends Application {
         });
         searchButton.setOnAction(new EventHandler<ActionEvent>() {
             /* search button has been set on action when user click
-            on button using mouse content mentioned in search text
-            filed will be set to search for particular/ related product.
+               on button using mouse content mentioned in search text
+               filed will be set to search for particular/ related product.
              */
             @Override
             public void handle(ActionEvent actionEvent) {
@@ -96,9 +96,9 @@ public class supply_chain extends Application {
         });
         signup.setOnAction(new EventHandler<ActionEvent>() {
             /* signup Hyperlink has been set on action to set clear previous body pane
-            content and load it with signup page.
-            sign up page details will be fetched from signUpPage method from SignUp class and
-            set it on body pane
+               content and load it with signup page.
+               sign up page details will be fetched from signUpPage method from SignUp class and
+               set it on body pane
              */
             @Override
             public void handle(ActionEvent actionEvent) {
@@ -120,13 +120,11 @@ public class supply_chain extends Application {
 
             }
         });
-
         GridPane headerPane = new GridPane();
-
         /* After initializing Grid pane for header,
-         CSS styling of all children's of header
-         pane and adding then into header pane
-        */
+           CSS styling of all children's of header
+           pane and adding then into header pane
+         */
         headerPane.setMinSize(width, headerBarsize);
         searchText.setTranslateX(280);
         searchButton.setTranslateX(300);
@@ -157,9 +155,9 @@ public class supply_chain extends Application {
 
     private GridPane footerBar(){
         /* this is the method that loads the whole footer bar
-        into footer pane this method contains Labels and to
-        give good suggestion for how to use this web and
-        contact details
+           into footer pane this method contains Labels and to
+           give good suggestion for how to use this web and
+           contact details
          */
         FooterInfo = new Label();
         FooterAskLogin = new Label();
@@ -194,7 +192,7 @@ public class supply_chain extends Application {
     }
     private GridPane homePage(){
         /* this method load the home page as soon as the application
-         runs and after user logged out from the session
+           runs and after user logged out from the session
          */
         Label homeMessage1 = new Label("Welcome to My Shopping! ");
         Label homeMessage2 = new Label("One of the best upcoming commercial website ");
@@ -217,7 +215,8 @@ public class supply_chain extends Application {
     }
     private Pane createContent() throws FileNotFoundException {
         /* createContent method is used to initialize header bar,
-         footer bar and home page and assign from to respective pane */
+           footer bar and home page and assign from to respective pane
+         */
         root = new Pane();
         BackgroundImage myBg = new BackgroundImage(new Image("C:\\Users\\Dpk\\Desktop\\Java\\supply_managment\\src\\images\\home_main.png",width,height + headerBarsize,false,true),BackgroundRepeat.NO_REPEAT, BackgroundRepeat.NO_REPEAT,BackgroundPosition.DEFAULT,BackgroundSize.DEFAULT);
         root.setBackground(new Background(myBg));
@@ -241,9 +240,10 @@ public class supply_chain extends Application {
     @Override
     public void start(Stage stage) throws IOException {
         /* all the application content has been initialized
-        by calling create content method and assigned it to
-         scroll pane due to necessary of scroll bar to adjust
-         window size as needed*/
+           by calling create content method and assigned it to
+           scroll pane due to necessary of scroll bar to adjust
+           window size as needed
+         */
         ScrollPane scrollPane = new ScrollPane(createContent());
         scrollPane.setPrefSize(width+2, height + 2*headerBarsize + 2);
         scrollPane.setHbarPolicy(ScrollPane.ScrollBarPolicy.AS_NEEDED);
