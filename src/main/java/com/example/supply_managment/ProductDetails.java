@@ -7,6 +7,7 @@ import javafx.scene.control.cell.PropertyValueFactory;
 import javafx.scene.layout.Pane;
 public class ProductDetails {
    public static TableView<Product> productTable;
+   public static ObservableList<Product> products;
     public Pane getAllProducts(){
         TableColumn<Product,Integer> id = new TableColumn<>("id");
         id.setCellValueFactory(new PropertyValueFactory<Product,Integer>("id"));
@@ -21,7 +22,7 @@ public class ProductDetails {
         TableColumn <Product,Integer> quantity  = new TableColumn<Product,Integer>("Quantity");
         quantity.setCellValueFactory(new PropertyValueFactory<>("quantity"));
 
-        ObservableList<Product> products = Product.getAllProducts();
+        products = Product.getAllProducts();
          productTable = new TableView<>();
 
         productTable.setItems(products);

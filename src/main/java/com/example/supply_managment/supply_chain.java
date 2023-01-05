@@ -1,6 +1,8 @@
 package com.example.supply_managment;
 
 import javafx.application.Application;
+import javafx.collections.transformation.FilteredList;
+import javafx.collections.transformation.SortedList;
 import javafx.event.ActionEvent;
 import javafx.event.EventHandler;
 import javafx.geometry.Pos;
@@ -49,7 +51,7 @@ public class supply_chain extends Application {
            into header pane this method contains text fields to
            take input from user for search of particular product,
            search button to search for particular product mentioned
-           in search textfield, image name login is used to redirect
+           in search textField, image name login is used to redirect
            from home to user login page, HyperLink Signup is also
            used to redirect from home to Signup page.
          */
@@ -61,6 +63,23 @@ public class supply_chain extends Application {
         loginImage = new ImageView(loginImg);
         Image smallLogo = new Image(new FileInputStream("C:\\Users\\Dpk\\Desktop\\Java\\supply_managment\\src\\images\\header_logo.png"));
         ImageView imageViewSmallLogo = new ImageView(smallLogo);
+
+        //Dynamic search for products not working need to dedub error
+/*        FilteredList<Product> filteredList = new FilteredList<>(ProductDetails.products, b-> true);
+        searchText.textProperty().addListener((observableValue, oldValue, newValue) ->{
+            filteredList.setPredicate(Product ->{
+                if(newValue == null || newValue.isEmpty())return  true;
+                String loweCaseFilter = newValue.toLowerCase();
+                if(Product.getName().toLowerCase().contains(loweCaseFilter)) return true;
+                else if(Product.getProductDetails().toLowerCase().contains(loweCaseFilter))return true;
+                else return false;
+
+            });
+        });
+        SortedList <Product> sortedData = new SortedList<>(ProductDetails.products);
+        sortedData.comparatorProperty().bind(ProductDetails.productTable.comparatorProperty());
+        ProductDetails.productTable.setItems(sortedData);
+*/
 
         searchText.setOnKeyPressed(keyEvent -> {
             /* search text field has been set on action
